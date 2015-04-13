@@ -1,4 +1,5 @@
 # extend-error
+[![Build Status](https://travis-ci.org/ianwremmel/extend-error.svg)](https://travis-ci.org/ianwremmel/extend-error) [![Dependencies](https://david-dm.org/ianwremmel/extend-error.svg)](https://david-dm.org/ianwremmel/extend-error)
 
 Ever tried to create custom error types in Node.js and wished it should be this simple?
 
