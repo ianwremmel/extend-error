@@ -1,21 +1,43 @@
 'use strict';
 
+var cloneDeep = require('lodash.clonedeep');
+var forOwn = require('lodash.forown');
+var identity = require('lodash.identity');
 var util = require('util');
-var assert = require('assert');
 
 /**
  * Create subtype of Error object
  *
- * @param BaseType [optional] defaults to {Error}
- * @param subTypeName
- * @param errorCode [optional]
+ * @param {Object} BaseType [optional] defaults to {Error}
+ * @param {string} subTypeName for backward compatibility. use
+ * `options.subTypeName`
+ * @param {number} errorCode for backward compatibility. use `options.code`
+ * @param {Object} options
+ * @param {string} options.subTypeName
+ * @param {Function} options.parseFn parses the parameters passed to the
+ * {SubType} constructor and returns the Error's message. Called in the context
+ * of the {SubType} instance. One possible use might be to pass an
+ * {HttpResponse} Object into the error constructor and assign the response as
+ * one of the error's properties.
+ * @param {Function} options.toString Alternate `toString()` method to attach to
+ * the {SubType}'s prototype.
+ * @param {Object} options.properties place properties here that should be
+ * attached to every instance of {SubType}. For example, the HTTP status code
+ * that corresponds to this exception
  * @returns {SubType}
  */
-function extendError(BaseType, subTypeName, errorCode /*optional*/) {
-	if (typeof BaseType === 'string') {
+function extendError(BaseType, subTypeName, errorCode, options) {
+	if (typeof BaseType !== 'function') {
+		options = errorCode;
 		errorCode = subTypeName;
 		subTypeName = BaseType;
 		BaseType = Error;
+	}
+
+	if (typeof subTypeName === 'object') {
+		options = subTypeName;
+		subTypeName = undefined;
+		errorCode = undefined;
 	}
 
 	if (!this) {
@@ -26,7 +48,18 @@ function extendError(BaseType, subTypeName, errorCode /*optional*/) {
 		return extendError.apply(BaseType, arguments);
 	}
 
-	assert(subTypeName, 'subTypeName is required');
+	subTypeName = subTypeName || options.subTypeName;
+	if (!subTypeName) {
+		throw new Error('`subTypeName` is required');
+	}
+
+	var parseFn = options && options.parseFn || identity;
+	var properties = (options && options.properties) ? cloneDeep(options.properties) : {};
+	var toString = options && options.toString;
+
+	if (errorCode) {
+		properties.code = errorCode;
+	}
 
 	// Define the new type
 	function SubType(message) {
@@ -35,14 +68,13 @@ function extendError(BaseType, subTypeName, errorCode /*optional*/) {
 			return new SubType(message);
 		}
 
-		// Populate error details
 		this.name = subTypeName;
-		// Only set `this.code` if a code is defined for the type (to prevent
-		// "{code:undefined}" when stringifying)
-		if (errorCode) {
-			this.code = errorCode;
-		}
-		this.message = message || '';
+
+		this.message = parseFn(message || '');
+
+		forOwn(properties, function(value, key) {
+			this[key] = value;
+		}, this);
 
 		// Include stack trace in error object
 		Error.captureStackTrace(this, this.constructor);
@@ -53,12 +85,12 @@ function extendError(BaseType, subTypeName, errorCode /*optional*/) {
 
 	// Override the toString method to error type name and inspected message (to
 	// expand objects)
-	SubType.prototype.toString = function toString() {
+	SubType.prototype.toString = toString || function toString() {
 		return this.name + ': ' + util.inspect(this.message);
 	};
 
-	// Attach extend() to the SubType to make it extendable further (but only if
-	// extend has been monkeypatched onto the Error object).
+	// Attach extend() to the SubType to make it further extendable (but only if
+	// `extend()` has been monkeypatched onto the Error object).
 	if (this.extend) {
 		SubType.extend = this.extend;
 	}
