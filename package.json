@@ -4,7 +4,7 @@
   "description": "Easily define custom error types in Node.js",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha --reporter spec && karma start karma-ci.conf.js"
+    "test": "./test.sh"
   },
   "author": "Jayy Vis <jayyvis@gmail.com>",
   "devDependencies": {
