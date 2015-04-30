@@ -27,10 +27,7 @@ module.exports = function configurKarma(config) {
 
     browserify: {
       debug: true,
-      watch: true,
-      transform: [
-        'envify'
-      ]
+      watch: true
     },
 
     browsers: Object.keys(customLaunchers),
