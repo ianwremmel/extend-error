@@ -1,4 +1,4 @@
-#!/bin.bash
+#!/bin/bash
 
 mocha --reporter spec
 if [ "$TRAVIS_NODE_VERSION" == "iojs" ]; then
