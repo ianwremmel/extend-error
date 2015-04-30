@@ -1,3 +1,10 @@
+addons:
+  sauce_connect: true
+before_script: npm install -g karma-cli
+env:
+  global:
+    - secure: w4KGbAj7WB8ZRoc1/UsVbG7s/9EAt+wvwdY4sOA+HQA58f22e8B4GmKAohcIqI3V4iR4DA3V8kTw49sR3qJ5k8ylsmb0zC2cZDUNJdXY38Am+EIrGhjQ9NjvDvlefWlTY+1bYFDLa0N385gU1Q0uHEu11g3V7G6OIIKy62EACBc=
+    - secure: oMnqgsnHxMRSVVKFRt63yuq41RmvScYpWuu7aJyNK38GTojs3EKqkA5EyWJXrJ9PjG/r5hZr1+RGY8y0zHPGSGM5dl3oGN5jRSNeBZs8p6VtaF6WxGNq1efCX8slCsgyv6ZVIEZfUE/M16mwLXL/y6aS2HciE4KQdOAkgTe/n6A=
 language: node_js
 node_js:
   - "0.12"
