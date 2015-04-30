@@ -37,7 +37,7 @@ module.exports = function configurKarma(config) {
 
     colors: true,
 
-    customLaunchers: launchers,
+    customLaunchers: customLaunchers,
 
     files: [
       'test/**/*.js'
