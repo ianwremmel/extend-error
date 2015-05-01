@@ -43,6 +43,8 @@ module.exports = function configurKarma(config) {
 
 		logLevel: config.LOG_DEBUG,
 
+		port: 8000,
+
 		preprocessors: {
 			'test/**/*.js': ['browserify']
 		},
