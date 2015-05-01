@@ -81,7 +81,12 @@ function extendError(BaseType, subTypeName, errorCode, options) {
 		}, this);
 
 		// Include stack trace in error object
-		Error.captureStackTrace(this, this.constructor);
+		if (Error.captureStackTrace) {
+			Error.captureStackTrace(this, this.constructor);
+		}
+		else {
+			this.stack = Error().stack;
+		}
 	}
 
 	// Inherit the base prototype chain
