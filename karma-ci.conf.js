@@ -13,8 +13,8 @@ module.exports = function configurKarma(config) {
 			process.exit(1);
 		}
 		else {
-			process.env.SAUCE_USERNAME = require('./sauce').username;
-			process.env.SAUCE_ACCESS_KEY = require('./sauce').accessKey;
+			process.env.SAUCE_USERNAME = require('./sauce').SAUCE_USERNAME;
+			process.env.SAUCE_ACCESS_KEY = require('./sauce').SAUCE_ACCESS_KEY;
 		}
 	}
 
