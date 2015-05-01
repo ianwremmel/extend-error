@@ -6,4 +6,7 @@ env:
     - secure: oMnqgsnHxMRSVVKFRt63yuq41RmvScYpWuu7aJyNK38GTojs3EKqkA5EyWJXrJ9PjG/r5hZr1+RGY8y0zHPGSGM5dl3oGN5jRSNeBZs8p6VtaF6WxGNq1efCX8slCsgyv6ZVIEZfUE/M16mwLXL/y6aS2HciE4KQdOAkgTe/n6A=
 language: node_js
 node_js:
+  - "0.12"
+  - "0.11"
+  - "0.10"
   - "iojs"

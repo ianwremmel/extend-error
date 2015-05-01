@@ -4,16 +4,20 @@
   "description": "Easily define custom error types in Node.js",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter spec && karma start karma-ci.conf.js"
+    "test": "mocha --ui bdd"
+  },
+  "testling": {
+    "harness": "mocha-bdd",
+    "files": "test/**/*.js",
+    "browsers": [
+      "ie/8..latest",
+      "chrome/latest",
+      "firefox/latest",
+      "safari/latest"
+    ]
   },
   "author": "Jayy Vis <jayyvis@gmail.com>",
   "devDependencies": {
-    "karma": "~0.12.31",
-    "karma-browserify": "~4.1.2",
-    "karma-cli": "0.0.4",
-    "karma-mocha": "~0.1.10",
-    "karma-mocha-reporter": "~1.0.2",
-    "karma-sauce-launcher": "~0.2.10",
     "mocha": "*"
   },
   "repository": {
