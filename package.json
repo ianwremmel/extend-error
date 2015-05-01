@@ -8,6 +8,9 @@
     "test-browser": "karma start karma-ci.conf.js"
   },
   "author": "Jayy Vis <jayyvis@gmail.com>",
+  "contributors": [
+    "Ian W. Remmel <design@ianwremmel.com>"
+  ],
   "devDependencies": {
     "karma": "~0.12.31",
     "karma-browserify": "~4.1.2",
