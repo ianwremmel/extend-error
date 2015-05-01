@@ -10,8 +10,8 @@ module.exports = function configurKarma(config) {
     },
 
     browsers: [
-      'chrome',
-      'firefox'
+      'Chrome',
+      'Firefox'
     ],
 
     colors: true,
