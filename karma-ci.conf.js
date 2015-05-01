@@ -1,40 +1,64 @@
 'use strict';
 
 module.exports = function configurKarma(config) {
-  config.set({
-    basePath: '',
+	var browsers = require('./browsers');
+	var fs = require('fs');
+	var pkg = require('./package');
 
-    browserify: {
-      debug: true,
-      watch: true
-    },
+	// Use ENV vars on Travis and sauce.json locally to get credentials
+	if (!process.env.SAUCE_USERNAME) {
+		if (!fs.existsSync('sauce.json')) {
+			console.log('Create a sauce.json with your credentials based on the sauce-sample.json file.');
+			/* eslint no-process-exit: [0] */
+			process.exit(1);
+		}
+		else {
+			process.env.SAUCE_USERNAME = require('./sauce').username;
+			process.env.SAUCE_ACCESS_KEY = require('./sauce').accessKey;
+		}
+	}
 
-    browsers: [
-      'Chrome',
-      'Firefox'
-    ],
+	config.set({
+		basePath: '',
 
-    colors: true,
+		browserify: {
+			debug: true,
+			watch: true
+		},
 
-    files: [
-      'test/**/*.js'
-    ],
+		browsers: Object.keys(browsers).concat([
+			'Chrome',
+			'Firefox'
+		]),
 
-    frameworks: [
-      'browserify',
-      'mocha'
-    ],
+		colors: true,
 
-    logLevel: config.LOG_DEBUG,
+		customLaunchers: browsers,
 
-    preprocessors: {
-      'test/**/*.js': ['browserify']
-    },
+		files: [
+			'test/**/*.js'
+		],
 
-    reporters: [
-      'mocha'
-    ],
+		frameworks: [
+			'browserify',
+			'mocha'
+		],
 
-    singleRun: true
-  });
+		logLevel: config.LOG_DEBUG,
+
+		preprocessors: {
+			'test/**/*.js': ['browserify']
+		},
+
+		reporters: [
+			'mocha',
+			'saucelabs'
+		],
+
+		sauceLabs: {
+			testName: pkg.name
+		},
+
+		singleRun: true
+	});
 };
