@@ -15,9 +15,9 @@ module.exports = {
 		browserName: 'firefox',
 		version: '36'
 	},
-	sl_safari_7_osx10: {
+	sl_safari_7_osx9: {
 		base: 'SauceLabs',
-		platform: 'OS X 10.10',
+		platform: 'OS X 10.9',
 		browserName: 'safari',
 		version: '7'
 	},
