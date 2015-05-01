@@ -64,6 +64,10 @@ function extendError(BaseType, subTypeName, errorCode, options) {
 			return new SubType(message);
 		}
 
+		forOwn(properties, function(value, key) {
+			this[key] = value;
+		}, this);
+
 		Object.defineProperties(this, {
 			name: {
 				enumerable: false,
@@ -74,11 +78,6 @@ function extendError(BaseType, subTypeName, errorCode, options) {
 				value: this.parseFn(message || '')
 			}
 		});
-
-
-		forOwn(properties, function(value, key) {
-			this[key] = value;
-		}, this);
 
 		// Include stack trace in error object
 		if (Error.captureStackTrace) {
