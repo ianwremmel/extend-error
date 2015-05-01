@@ -59,6 +59,7 @@ module.exports = function configurKarma(config) {
     ],
 
     sauceLabs: {
+      startConnect: false,
       testName: pkg.name
     },
 
