@@ -45,11 +45,13 @@ module.exports = function configurKarma(config) {
       'mocha'
     ],
 
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_DEBUG,
 
     preprocessors: {
       'test/**/*.js': ['browserify']
     },
+
+    port: 8000,
 
     reporters: [
       'mocha',
