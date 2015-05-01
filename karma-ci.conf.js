@@ -26,10 +26,7 @@ module.exports = function configurKarma(config) {
 			watch: true
 		},
 
-		browsers: Object.keys(browsers).concat([
-			'Chrome',
-			'Firefox'
-		]),
+		browsers: Object.keys(browsers),
 
 		colors: true,
 
@@ -56,6 +53,10 @@ module.exports = function configurKarma(config) {
 		],
 
 		sauceLabs: {
+			build: process.env.DRONE_BUILD_NUMBER,
+			tags: [
+				process.env.DRONE_BRANCH
+			],
 			testName: pkg.name
 		},
 
