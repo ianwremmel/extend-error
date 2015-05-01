@@ -3,21 +3,21 @@
 /* eslint camelcase: [0] */
 
 module.exports = {
-	sl_chrome_41_osx9: {
+	sl_chrome_41_osx10: {
 		base: 'SauceLabs',
-		platform: 'OS X 10.9',
+		platform: 'OS X 10.10',
 		browserName: 'chrome',
 		version: '41'
 	},
-	sl_firefox_36_osx9: {
+	sl_firefox_36_osx10: {
 		base: 'SauceLabs',
-		platform: 'OS X 10.9',
+		platform: 'OS X 10.10',
 		browserName: 'firefox',
 		version: '36'
 	},
-	sl_safari_7_osx9: {
+	sl_safari_7_osx10: {
 		base: 'SauceLabs',
-		platform: 'OS X 10.9',
+		platform: 'OS X 10.10',
 		browserName: 'safari',
 		version: '7'
 	},
