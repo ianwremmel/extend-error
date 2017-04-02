@@ -1,93 +1,108 @@
 # extend-error
-[![Build Status](https://travis-ci.org/ianwremmel/extend-error.svg)](https://travis-ci.org/ianwremmel/extend-error) [![Dependencies](https://david-dm.org/ianwremmel/extend-error.svg)](https://david-dm.org/ianwremmel/extend-error)
-[![Browser Status](https://drone.io/github.com/ianwremmel/extend-error/status.png)](https://drone.io/github.com/ianwremmel/extend-error/latest)
 
-Ever tried to create custom error types in Node.js and wished it should be this simple?
+[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
-```
-var MyError = Error.extend('MyError');
-```
+> Extending errors in JavaScript was hard. Until now.
 
-```
-throw MyError('wow')
-```
+## Background
 
-### installation
+This repo started as a fork of [extend-error](https://github.com/jayyvis/extend-error) but, as JavaScript has progressed, there are better options. Now, this is just a README containg recomendations.
 
-```
-npm install extend-error
+## Install
+
+This should work in any adequately recent version of Node without dependencies, but for complete browser support, you'll need
+
+```bash
+npm install --save-dev babel-core babel-plugin-transform-builtin-extend
 ```
 
-and in your app.js, just ```require('extend-error').polyfill()```. It will provide you an extend() method for the Error type.
+## Usage
 
-### syntax
-- extend() takes two arguments : subTypeName & errorCode [optional]
-- it returns the newly created error type
+Creating your own exceptions is as simple as
 
-#### polyfilling
-
-All of the examples here assume you ran `polyfill()`. If you're not comfortable with modifying native objects, you can use `extendError()` directly.
-
-```
-var extendError = require('extend-error');
-var ClientError = extendError('ClientError', 400);
-var HttpNotFound = extendError(ClientError, HttpNotFound, 404);
-```
-
-### more examples for a web app
-
-```
-var AppError = Error.extend('AppError', 500);
-var ClientError = Error.extend('ClientError', 400);
+```js
+class Exception extends Error {
+  constructor(...args) {
+    super(...args);
+    // This line *should* only be necessary for browsers; recent versions of
+    // node should be ok without it. If this line is not included, all
+    // Exceptions will be prefixed with "Error" when they're stringified, which
+    // largely defeats the purpose of extending Error to begin with.
+    this.name = this.constructor.name;
+  }
+}
 ```
 
-extend ClientError further for specific http types
+### Browsers
+
+For use in all browsers, you'll need to compile with babel with at least the following config
 
 ```
-var HttpNotFound = ClientError.extend('HttpNotFoundError', 404);
-var HttpUnauthorized = ClientError.extend('HttpUnauthorized', 401);
+{
+  "plugins": [
+    ["babel-plugin-transform-builtin-extend", {
+      "globals": ["Error"]
+    }]
+  ],
+  sourceMaps: true
+}
 ```
 
-### throwing errors
+### Getting Fancy
 
-```
-throw new AppError('unable to connect db due to error: ' + err);
+Let's say we want to create an `Exception` for http errors. Rather than passing
+a string to the constructor, we want to pass an HttpResponse object. Errors are
+a little weird about when and how you can set their message property and
+overriding `toString()`, isn't quite as helpful as you want it to be. Instead,
+try this:
 
-throw new ClientError({'message':'required field missing', field: 'email'})
+```js
+class Exception extends Error {
+  constructor(...args) {
+    super(...args);
+    // This line *should* only be necessary for browsers; recent versions of
+    // node should be ok without it. If this line is not included, all
+    // Exceptions will be prefixed with "Error" when they're stringified, which
+    // largely defeats the purpose of extending Error to begin with.
+    this.name = this.constructor.name;
 
-throw new HttpNotFound('no post found with id: ' + id);
+    // Make it easy for derived Exceptions to change the error string.
+    if (this.parse) {
+      this.message = this.parse(...args);
+    }
+  }
+}
 
-throw new HttpNotFound({'message': 'no such post', 'id': id});
-```
+class HttpError extends Exception {
+  parse(res) {
+    if (typeof res.body === `string`) {
+      return res.body;
+    }
 
-### don't worry when you forget 'new'
+    if (typeof res.body === `object`) {
+      return JSON.stringify(res.body, null, 2);
+    }
 
-```
-throw ClientError('bad request');
-```
-
-### instanceof
-
-throw an error in controller
-
-```
-var err = HttpNotFound('user profile not found');
-
-throw err;
-(or)
-callback(err)
-```
-
-handle it easily in global error handler (in case of express.js error middleware)
-
-```
-if (err instanceof ClientError) {
-	//send out the actual message
-	res.send(err.code, err.message);
-} else {
-	//send out a generic message
-	res.send(500, 'oops! something went wrong');
-	log.error(err);
+    return `An undetermined http error occurred with status code ${res.statusCode}`;
+  }
 }
 
 ```
+
+## Caveats
+
+Depending on browser and/or node version, stack traces may include the Exception constructor.
+
+## Maintainer
+
+[@ianwremmel](https://github.com/ianwremmel/)
+
+## Contribute
+
+This is intended as a guideline rather than a complete instruction set. If you find mistakes or better methods around making it possible to extend errors, PRs are very welcome. However, I'm going to be very particular about PRs that enhance the `Exception` class itself.
+
+## License
+
+[MIT © Ian W. Remmel](https://github.com/ianwremmel/tooling.js/blob/master/LICENSE)
+
+> This repo is a fork of https://github.com/jayyvis/extend-error, so it's got the history of that project in it, but zero code sharing at this point. I have no idea how licensing applies here.
