@@ -1,4 +1,6 @@
 # extend-error
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/ianwremmel/extend-error.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/ianwremmel/extend-error.svg)](https://travis-ci.org/ianwremmel/extend-error) [![Dependencies](https://david-dm.org/ianwremmel/extend-error.svg)](https://david-dm.org/ianwremmel/extend-error)
 [![Browser Status](https://drone.io/github.com/ianwremmel/extend-error/status.png)](https://drone.io/github.com/ianwremmel/extend-error/latest)
 
